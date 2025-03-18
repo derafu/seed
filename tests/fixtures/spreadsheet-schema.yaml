@@ -1,0 +1,309 @@
+__schema:
+  - 
+    type: "metadata"
+    name: "schema_info"
+    properties: '{"name":"UBL Electronic Invoicing Schema","tables_count":7,"generated_at":"2025-03-17 10:00:00"}'
+  -
+    type: "table"
+    name: "party"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "party.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "party.name"
+    properties: '{"type":"string","nullable":true,"length":255}'
+  -
+    type: "column"
+    name: "party.tax_id"
+    properties: '{"type":"string","nullable":true,"length":50}'
+  -
+    type: "column"
+    name: "party.country_code"
+    properties: '{"type":"string","nullable":true,"length":2}'
+  -
+    type: "index"
+    name: "party.idx_party_tax_country"
+    properties: '{"columns":["tax_id","country_code"],"unique":false,"flags":[]}'
+  -
+    type: "table"
+    name: "item"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "item.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "item.name"
+    properties: '{"type":"string","nullable":true,"length":255}'
+  -
+    type: "column"
+    name: "item.description"
+    properties: '{"type":"text","nullable":true}'
+  -
+    type: "column"
+    name: "item.unit_price"
+    properties: '{"type":"decimal","nullable":true,"precision":19,"scale":4}'
+  -
+    type: "column"
+    name: "item.parent_item_id"
+    properties: '{"type":"guid","nullable":true}'
+  -
+    type: "index"
+    name: "item.idx_item_name"
+    properties: '{"columns":["name"],"unique":false,"flags":[]}'
+  -
+    type: "foreign_key"
+    name: "item.fk_item_parent"
+    properties: '{"local_columns":["parent_item_id"],"foreign_table":"item","foreign_columns":["id"],"on_delete":"SET NULL","on_update":"CASCADE"}'
+  -
+    type: "table"
+    name: "tax_scheme"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "tax_scheme.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "tax_scheme.code"
+    properties: '{"type":"string","nullable":true,"length":20}'
+  -
+    type: "column"
+    name: "tax_scheme.name"
+    properties: '{"type":"string","nullable":true,"length":100}'
+  -
+    type: "index"
+    name: "tax_scheme.unq_tax_scheme_code"
+    properties: '{"columns":["code"],"unique":true,"flags":[]}'
+  -
+    type: "table"
+    name: "tax_category"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "tax_category.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "tax_category.name"
+    properties: '{"type":"string","nullable":true,"length":100}'
+  -
+    type: "column"
+    name: "tax_category.tax_scheme_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "tax_category.rate"
+    properties: '{"type":"decimal","nullable":true,"precision":5,"scale":2}'
+  -
+    type: "index"
+    name: "tax_category.idx_tax_category_scheme"
+    properties: '{"columns":["tax_scheme_id"],"unique":false,"flags":[]}'
+  -
+    type: "foreign_key"
+    name: "tax_category.fk_tax_category_scheme"
+    properties: '{"local_columns":["tax_scheme_id"],"foreign_table":"tax_scheme","foreign_columns":["id"],"on_delete":"RESTRICT","on_update":"CASCADE"}'
+  -
+    type: "table"
+    name: "invoice"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "invoice.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "invoice.invoice_number"
+    properties: '{"type":"string","nullable":true,"length":50}'
+  -
+    type: "column"
+    name: "invoice.issue_date"
+    properties: '{"type":"date","nullable":true}'
+  -
+    type: "column"
+    name: "invoice.invoice_type_code"
+    properties: '{"type":"string","nullable":true,"length":10}'
+  -
+    type: "column"
+    name: "invoice.currency_code"
+    properties: '{"type":"string","nullable":true,"length":3}'
+  -
+    type: "column"
+    name: "invoice.customer_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "invoice.supplier_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "invoice.total_amount"
+    properties: '{"type":"decimal","nullable":true,"precision":19,"scale":4}'
+  -
+    type: "column"
+    name: "invoice.billing_period"
+    properties: '{"type":"integer","nullable":true}'
+  -
+    type: "index"
+    name: "invoice.unq_invoice_number"
+    properties: '{"columns":["invoice_number"],"unique":true,"flags":[]}'
+  -
+    type: "index"
+    name: "invoice.idx_invoice_date"
+    properties: '{"columns":["issue_date"],"unique":false,"flags":[]}'
+  -
+    type: "index"
+    name: "invoice.idx_invoice_customer"
+    properties: '{"columns":["customer_id"],"unique":false,"flags":[]}'
+  -
+    type: "index"
+    name: "invoice.idx_invoice_supplier"
+    properties: '{"columns":["supplier_id"],"unique":false,"flags":[]}'
+  -
+    type: "foreign_key"
+    name: "invoice.fk_invoice_customer"
+    properties: '{"local_columns":["customer_id"],"foreign_table":"party","foreign_columns":["id"],"on_delete":"RESTRICT","on_update":"CASCADE"}'
+  -
+    type: "foreign_key"
+    name: "invoice.fk_invoice_supplier"
+    properties: '{"local_columns":["supplier_id"],"foreign_table":"party","foreign_columns":["id"],"on_delete":"RESTRICT","on_update":"CASCADE"}'
+  -
+    type: "table"
+    name: "invoice_line"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "invoice_line.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "invoice_line.invoice_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "invoice_line.item_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "invoice_line.quantity"
+    properties: '{"type":"decimal","nullable":true,"precision":12,"scale":4}'
+  -
+    type: "column"
+    name: "invoice_line.unit_price"
+    properties: '{"type":"decimal","nullable":true,"precision":19,"scale":4}'
+  -
+    type: "column"
+    name: "invoice_line.total_price"
+    properties: '{"type":"decimal","nullable":true,"precision":19,"scale":4}'
+  -
+    type: "index"
+    name: "invoice_line.idx_invoice_line_invoice"
+    properties: '{"columns":["invoice_id"],"unique":false,"flags":[]}'
+  -
+    type: "index"
+    name: "invoice_line.idx_invoice_line_item"
+    properties: '{"columns":["item_id"],"unique":false,"flags":[]}'
+  -
+    type: "foreign_key"
+    name: "invoice_line.fk_invoice_line_invoice"
+    properties: '{"local_columns":["invoice_id"],"foreign_table":"invoice","foreign_columns":["id"],"on_delete":"CASCADE","on_update":"CASCADE"}'
+  -
+    type: "foreign_key"
+    name: "invoice_line.fk_invoice_line_item"
+    properties: '{"local_columns":["item_id"],"foreign_table":"item","foreign_columns":["id"],"on_delete":"RESTRICT","on_update":"CASCADE"}'
+  -
+    type: "table"
+    name: "invoice_line_tax"
+    properties: '{"primary_key":["id"]}'
+  -
+    type: "column"
+    name: "invoice_line_tax.id"
+    properties: '{"type":"guid","nullable":false,"primary_key":true}'
+  -
+    type: "column"
+    name: "invoice_line_tax.invoice_line_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "invoice_line_tax.tax_category_id"
+    properties: '{"type":"guid","nullable":false}'
+  -
+    type: "column"
+    name: "invoice_line_tax.tax_amount"
+    properties: '{"type":"decimal","nullable":true,"precision":19,"scale":4}'
+  -
+    type: "index"
+    name: "invoice_line_tax.idx_invoice_line_tax_line"
+    properties: '{"columns":["invoice_line_id"],"unique":false,"flags":[]}'
+  -
+    type: "index"
+    name: "invoice_line_tax.idx_invoice_line_tax_category"
+    properties: '{"columns":["tax_category_id"],"unique":false,"flags":[]}'
+  -
+    type: "foreign_key"
+    name: "invoice_line_tax.fk_invoice_line_tax_line"
+    properties: '{"local_columns":["invoice_line_id"],"foreign_table":"invoice_line","foreign_columns":["id"],"on_delete":"CASCADE","on_update":"CASCADE"}'
+  -
+    type: "foreign_key"
+    name: "invoice_line_tax.fk_invoice_line_tax_category"
+    properties: '{"local_columns":["tax_category_id"],"foreign_table":"tax_category","foreign_columns":["id"],"on_delete":"RESTRICT","on_update":"CASCADE"}'
+
+party:
+  -
+    - "id"
+    - "name"
+    - "tax_id"
+    - "country_code"
+
+item:
+  -
+    - "id"
+    - "name"
+    - "description"
+    - "unit_price"
+    - "parent_item_id"
+
+tax_scheme:
+  -
+    - "id"
+    - "code"
+    - "name"
+
+tax_category:
+  -
+    - "id"
+    - "name"
+    - "tax_scheme_id"
+    - "rate"
+
+invoice:
+  -
+    - "id"
+    - "invoice_number"
+    - "issue_date"
+    - "invoice_type_code"
+    - "currency_code"
+    - "customer_id"
+    - "supplier_id"
+    - "total_amount"
+    - "billing_period"
+
+invoice_line:
+  -
+    - "id"
+    - "invoice_id"
+    - "item_id"
+    - "quantity"
+    - "unit_price"
+    - "total_price"
+
+invoice_line_tax:
+  -
+    - "id"
+    - "invoice_line_id"
+    - "tax_category_id"
+    - "tax_amount"

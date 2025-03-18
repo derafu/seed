@@ -32,7 +32,7 @@ class SpreadsheetDataTarget implements DataTargetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function applyTableData(
         mixed $spreadsheet,

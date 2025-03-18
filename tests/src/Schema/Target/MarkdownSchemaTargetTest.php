@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Derafu\TestsSeed\Schema\Target;
 
-use Derafu\Seed\Column;
-use Derafu\Seed\ForeignKey;
-use Derafu\Seed\Index;
-use Derafu\Seed\Schema;
+use Derafu\Seed\Schema\Column;
+use Derafu\Seed\Schema\ForeignKey;
+use Derafu\Seed\Schema\Index;
+use Derafu\Seed\Schema\Schema;
 use Derafu\Seed\Schema\Source\DoctrineDbalSchemaSource;
+use Derafu\Seed\Schema\Table;
 use Derafu\Seed\Schema\Target\MarkdownSchemaTarget;
-use Derafu\Seed\Table;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

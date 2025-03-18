@@ -33,7 +33,7 @@ class SpreadsheetDataSource implements DataSourceInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function extractTableData(mixed $spreadsheet, string $table): array
     {
@@ -68,7 +68,7 @@ class SpreadsheetDataSource implements DataSourceInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTableNames(mixed $spreadsheet): array
     {
@@ -90,7 +90,7 @@ class SpreadsheetDataSource implements DataSourceInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function hasTableData(mixed $spreadsheet, string $table): bool
     {

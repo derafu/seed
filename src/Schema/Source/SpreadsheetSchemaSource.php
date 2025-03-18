@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Derafu\Seed\Schema\Source;
 
-use Derafu\Seed\Column;
 use Derafu\Seed\Contract\SchemaInterface;
 use Derafu\Seed\Contract\SchemaSourceInterface;
-use Derafu\Seed\ForeignKey;
-use Derafu\Seed\Index;
-use Derafu\Seed\Schema;
-use Derafu\Seed\Table;
+use Derafu\Seed\Schema\Column;
+use Derafu\Seed\Schema\ForeignKey;
+use Derafu\Seed\Schema\Index;
+use Derafu\Seed\Schema\Schema;
+use Derafu\Seed\Schema\Table;
 use Derafu\Spreadsheet\Contract\SheetInterface;
 use Derafu\Spreadsheet\Contract\SpreadsheetInterface;
 use InvalidArgumentException;
@@ -40,7 +40,7 @@ class SpreadsheetSchemaSource implements SchemaSourceInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function extractSchema(mixed $spreadsheet): SchemaInterface
     {
@@ -51,11 +51,25 @@ class SpreadsheetSchemaSource implements SchemaSourceInterface
             );
         }
 
-        // Check if schema sheet exists.
-        if (!$spreadsheet->hasSheet($this->schemaSheetName)) {
-            throw new RuntimeException('Schema sheet not found in spreadsheet.');
+        // If the schema sheet exists, process it.
+        if ($spreadsheet->hasSheet($this->schemaSheetName)) {
+            return $this->processSchema($spreadsheet);
         }
 
+        // Otherwise, guess the schema.
+        else {
+            return $this->guessSchema($spreadsheet);
+        }
+    }
+
+    /**
+     * Process the schema from the schema sheet.
+     *
+     * @param SpreadsheetInterface $spreadsheet The spreadsheet.
+     * @return SchemaInterface The schema.
+     */
+    private function processSchema(SpreadsheetInterface $spreadsheet): SchemaInterface
+    {
         // Get schema sheet.
         $schemaSheet = $spreadsheet->getSheet($this->schemaSheetName);
 
@@ -69,6 +83,66 @@ class SpreadsheetSchemaSource implements SchemaSourceInterface
         $this->processTables($schema, $schemaSheet);
 
         return $schema;
+    }
+
+    /**
+     * Guess the schema from the spreadsheet.
+     *
+     * @param SpreadsheetInterface $spreadsheet The spreadsheet.
+     * @return SchemaInterface The schema.
+     */
+    private function guessSchema(SpreadsheetInterface $spreadsheet): SchemaInterface
+    {
+        $schema = new Schema();
+
+        foreach ($spreadsheet->getSheets() as $sheet) {
+            $table = new Table($sheet->getName());
+            $columnNames = $sheet->getColumnNames();
+            $columnTypes = [];
+            $nColumns = count($columnNames);
+
+            foreach ($sheet->getDataRows() as $row) {
+                foreach ($columnNames as $columnName) {
+                    if (isset($columnTypes[$columnName])) {
+                        continue;
+                    }
+
+                    if (isset($row[$columnName])) {
+                        $columnTypes[$columnName] = $this->guessColumnType($row[$columnName]);
+                    }
+                }
+
+                if (count($columnTypes) === $nColumns) {
+                    break;
+                }
+            }
+
+            foreach ($columnNames as $columnName) {
+                $column = new Column($columnName, $columnTypes[$columnName]);
+                $table->addColumn($column);
+            }
+
+            if ($table->hasColumn('id')) {
+                $table->setPrimaryKey(['id']);
+            }
+
+            $schema->addTable($table);
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Guess the type of a column.
+     *
+     * @param mixed $value The value to guess the type of.
+     * @return string The type of the value.
+     */
+    private function guessColumnType(mixed $value): string
+    {
+        // TODO: Implement this method correctly.
+
+        return 'string';
     }
 
     /**

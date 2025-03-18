@@ -47,7 +47,7 @@ final class SqliteSchemaTarget implements SchemaTargetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function applySchema(SchemaInterface $schema): string
     {

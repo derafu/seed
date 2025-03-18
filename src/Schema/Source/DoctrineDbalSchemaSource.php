@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Derafu\Seed\Schema\Source;
 
-use Derafu\Seed\Column;
 use Derafu\Seed\Contract\SchemaInterface;
 use Derafu\Seed\Contract\SchemaSourceInterface;
-use Derafu\Seed\ForeignKey;
-use Derafu\Seed\Index;
-use Derafu\Seed\Schema;
-use Derafu\Seed\Table;
+use Derafu\Seed\Schema\Column;
+use Derafu\Seed\Schema\ForeignKey;
+use Derafu\Seed\Schema\Index;
+use Derafu\Seed\Schema\Schema;
+use Derafu\Seed\Schema\Table;
 use Doctrine\DBAL\Schema\Column as DoctrineColumn;
 use Doctrine\DBAL\Schema\Schema as DoctrineDbalSchema;
 use Doctrine\DBAL\Types\Type as DoctrineType;
@@ -30,7 +30,7 @@ use RuntimeException;
 final class DoctrineDbalSchemaSource implements SchemaSourceInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function extractSchema(mixed $source): SchemaInterface
     {

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed;
+namespace Derafu\Seed\Schema;
 
 use Derafu\Seed\Contract\IndexInterface;
 
@@ -68,7 +68,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getName(): string
     {
@@ -76,7 +76,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setName(string $name): self
     {
@@ -86,7 +86,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getColumns(): array
     {
@@ -94,7 +94,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setColumns(array $columnNames): self
     {
@@ -104,7 +104,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isUnique(): bool
     {
@@ -112,7 +112,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setUnique(bool $unique): self
     {
@@ -122,7 +122,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFlags(): array
     {
@@ -130,7 +130,7 @@ final class Index implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFlags(array $flags): self
     {

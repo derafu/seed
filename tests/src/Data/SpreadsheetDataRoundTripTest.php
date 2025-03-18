@@ -14,9 +14,9 @@ namespace Derafu\TestsSeed\Target\Data;
 
 use Derafu\Seed\Data\Source\SpreadsheetDataSource;
 use Derafu\Seed\Data\Target\SpreadsheetDataTarget;
-use Derafu\Spreadsheet\Dumper as SpreadsheetDumper;
-use Derafu\Spreadsheet\Factory as SpreadsheetFactory;
-use Derafu\Spreadsheet\Loader as SpreadsheetLoader;
+use Derafu\Spreadsheet\SpreadsheetDumper;
+use Derafu\Spreadsheet\SpreadsheetFactory;
+use Derafu\Spreadsheet\SpreadsheetLoader;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

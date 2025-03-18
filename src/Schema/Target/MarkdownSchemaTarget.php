@@ -25,7 +25,7 @@ use Derafu\Seed\Contract\TableInterface;
 final class MarkdownSchemaTarget implements SchemaTargetInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function applySchema(SchemaInterface $schema): string
     {

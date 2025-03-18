@@ -15,7 +15,7 @@ namespace Derafu\TestsSeed;
 use Derafu\Seed\Contract\SchemaInterface;
 use Derafu\Seed\Contract\SchemaSourceInterface;
 use Derafu\Seed\Contract\TableInterface;
-use Derafu\Seed\Schema;
+use Derafu\Seed\Schema\Schema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

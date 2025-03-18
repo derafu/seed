@@ -12,17 +12,17 @@ declare(strict_types=1);
 
 namespace Derafu\TestsSeed\Schema;
 
-use Derafu\Seed\Column;
-use Derafu\Seed\ForeignKey;
-use Derafu\Seed\Index;
-use Derafu\Seed\Schema;
+use Derafu\Seed\Schema\Column;
+use Derafu\Seed\Schema\ForeignKey;
+use Derafu\Seed\Schema\Index;
+use Derafu\Seed\Schema\Schema;
 use Derafu\Seed\Schema\Source\DoctrineDbalSchemaSource;
 use Derafu\Seed\Schema\Source\SpreadsheetSchemaSource;
+use Derafu\Seed\Schema\Table;
 use Derafu\Seed\Schema\Target\DoctrineDbalSchemaTarget;
 use Derafu\Seed\Schema\Target\SpreadsheetSchemaTarget;
-use Derafu\Seed\Table;
-use Derafu\Spreadsheet\Dumper as SpreadsheetDumper;
-use Derafu\Spreadsheet\Loader as SpreadsheetLoader;
+use Derafu\Spreadsheet\SpreadsheetDumper;
+use Derafu\Spreadsheet\SpreadsheetLoader;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Schema\Table as DoctrineTable;
 use PHPUnit\Framework\Attributes\CoversClass;

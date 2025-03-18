@@ -20,7 +20,7 @@ use Derafu\Seed\Contract\SchemaTargetInterface;
 use Derafu\Seed\Contract\TableInterface;
 use Derafu\Spreadsheet\Contract\SheetInterface;
 use Derafu\Spreadsheet\Contract\SpreadsheetInterface;
-use Derafu\Spreadsheet\Factory as SpreadsheetFactory;
+use Derafu\Spreadsheet\SpreadsheetFactory;
 
 /**
  * Converts a schema to a Derafu Spreadsheet format.
@@ -38,7 +38,7 @@ class SpreadsheetSchemaTarget implements SchemaTargetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function applySchema(SchemaInterface $schema): SpreadsheetInterface
     {

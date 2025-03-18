@@ -57,7 +57,7 @@ final class DoctrineDbalSchemaTarget implements SchemaTargetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function applySchema(SchemaInterface $schema): DoctrineSchema
     {

@@ -126,7 +126,7 @@ final class D2SchemaTarget implements SchemaTargetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function applySchema(SchemaInterface $schema): string
     {

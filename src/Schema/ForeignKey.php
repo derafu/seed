@@ -10,7 +10,7 @@ declare(strict_types=1);
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed;
+namespace Derafu\Seed\Schema;
 
 use Derafu\Seed\Contract\ForeignKeyInterface;
 

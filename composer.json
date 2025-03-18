@@ -25,8 +25,7 @@
         }
     },
     "require": {
-        "php": "^8.3",
-        "doctrine/dbal": "^4.2"
+        "php": "^8.3"
     },
     "require-dev": {
         "ext-xdebug": "*",
@@ -34,8 +33,17 @@
         "phpstan/phpstan": "^1.12",
         "phpunit/phpunit": "^11.4",
         "derafu/foundation": "dev-main",
+        "doctrine/dbal": "^4.2",
         "derafu/spreadsheet": "dev-main",
-        "phpoffice/phpspreadsheet": "^4.1"
+        "phpoffice/phpspreadsheet": "^4.1",
+        "symfony/console": "^7.2"
+    },
+    "suggest": {
+        "doctrine/dbal": "Required for working with databases using Doctrine DBAL.",
+        "derafu/spreadsheet": "Required for working with spreadsheets as sources or targets.",
+        "phpoffice/phpspreadsheet": "Required for working with spreadsheets in XLSX, XLSX or ODS formats.",
+        "symfony/yaml": "Required for working with spreadsheets in YAML format.",
+        "symfony/console": "Required for the command line interface (eg. derafu:seed)."
     },
     "scripts": {
         "docs": "php tools/phpdocumentor run --config=phpdoc.xml",
@@ -50,7 +58,8 @@
         ],
         "post-update-cmd": [
             "Derafu\\Foundation\\Installer::copyFiles"
-        ]
+        ],
+        "derafu:seed": "app/console.php derafu:seed"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

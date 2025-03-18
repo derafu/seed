@@ -10,7 +10,7 @@ declare(strict_types=1);
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed;
+namespace Derafu\Seed\Schema;
 
 use Derafu\Seed\Contract\ColumnInterface;
 use Derafu\Seed\Contract\ForeignKeyInterface;
@@ -156,7 +156,7 @@ final class Table implements TableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getIndexes(): array
     {
@@ -164,7 +164,7 @@ final class Table implements TableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getIndex(string $name): ?IndexInterface
     {
@@ -172,7 +172,7 @@ final class Table implements TableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function addIndex(IndexInterface $index): self
     {
@@ -182,7 +182,7 @@ final class Table implements TableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function hasIndex(string $name): bool
     {
