@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Derafu: ETL - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From Spreadsheets to Databases Seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Derafu\ETL\Database;
 
-use Derafu\ETL\Abstract\AbstractDatabase;
-use Derafu\ETL\Contract\DatabaseInterface;
-use Derafu\ETL\Contract\SchemaInterface;
+use Derafu\ETL\Database\Abstract\AbstractDatabase;
+use Derafu\ETL\Database\Contract\DatabaseInterface;
+use Derafu\ETL\Schema\Contract\SchemaInterface;
 use Derafu\ETL\Schema\Source\DoctrineSchemaSource;
 use Derafu\ETL\Schema\Target\DoctrineSchemaTarget;
 use Derafu\ETL\Schema\Target\SpreadsheetSchemaTarget;
@@ -27,7 +27,6 @@ use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager as DoctrineAbstractSchemaManager;
 use Doctrine\DBAL\Schema\Comparator as DoctrineComparator;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
-use Exception;
 use RuntimeException;
 
 /**
@@ -51,7 +50,7 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
      * @param array $options The database options.
      */
     public function __construct(
-        string|array|DoctrineConnection $doctrine,
+        DoctrineConnection|array|string $doctrine,
         array $options = []
     ) {
         if (is_string($doctrine)) {
@@ -124,6 +123,29 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
     /**
      * {@inheritDoc}
      */
+    public function sync(
+        DatabaseInterface $source,
+        array $options = []
+    ): self {
+        // Start a transaction.
+        $this->connection->beginTransaction();
+
+        // Get the SQL statements of differences and apply them.
+        $sqlStatements = $this->diffSchema($source->schema());
+        foreach ($sqlStatements as $sql) {
+            $this->connection->executeStatement($sql);
+        }
+
+        // Commit the transaction.
+        $this->connection->commit();
+
+        // Return the database.
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function createSchema(): SchemaInterface
     {
         $doctrineSchema = $this->getSchemaManager()->introspectSchema();
@@ -175,6 +197,7 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
         // Get the SQL statements to create the structure.
         $sqlStatements = [];
 
+        // Get the SQL statements to create the structure.
         foreach ($schemaDiff->getCreatedTables() as $table) {
             $sqlStatements = array_merge(
                 $sqlStatements,
@@ -182,6 +205,7 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
             );
         }
 
+        // Get the SQL statements to alter the structure.
         foreach ($schemaDiff->getAlteredTables() as $tableDiff) {
             $sqlStatements = array_merge(
                 $sqlStatements,
@@ -189,32 +213,33 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
             );
         }
 
+        // Get the SQL statements to drop the structure.
         foreach ($schemaDiff->getDroppedTables() as $table) {
             $sqlStatements[] = sprintf("DROP TABLE %s;", $table->getName());
         }
 
+        // Return the SQL statements.
         return $sqlStatements;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function loadFromDump(string $source, array $options = []): self
+    protected function loadFromDump(string $source, array $options = []): int
     {
-        $this->connection->executeStatement($source);
-
-        return $this;
+        return $this->connection->executeStatement($source);
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function loadFromArray(array $source, array $options = []): self
+    protected function loadFromArray(array $source, array $options = []): int
     {
         // Start a transaction.
         $this->connection->beginTransaction();
 
         // Insert or update the data.
+        $rowsLoaded = 0;
         foreach ($source as $table => $rows) {
             // If there is no data, skip this table.
             if (empty($rows)) {
@@ -225,14 +250,14 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
             [$query, $params] = $this->buildUpsertQuery($table, $rows);
 
             // Execute the query.
-            $this->connection->executeStatement($query, $params);
+            $rowsLoaded += $this->connection->executeStatement($query, $params);
         }
 
         // Commit the transaction.
         $this->connection->commit();
 
-        // Return the database.
-        return $this;
+        // Return the number of rows loaded.
+        return $rowsLoaded;
     }
 
     /**
@@ -241,24 +266,18 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
     protected function loadFromDatabase(
         DatabaseInterface $source,
         array $options = []
-    ): self {
+    ): int {
         // Start a transaction.
         $this->connection->beginTransaction();
 
-        // Get the SQL statements of differences and apply them.
-        $sqlStatements = $this->diffSchema($source->schema());
-        foreach ($sqlStatements as $sql) {
-            $this->connection->executeStatement($sql);
-        }
-
         // Insert or update the data.
-        $this->loadFromArray($source->data());
+        $rowsLoaded = $this->loadFromArray($source->data());
 
         // Commit the transaction.
         $this->connection->commit();
 
-        // Return the database.
-        return $this;
+        // Return the number of rows loaded.
+        return $rowsLoaded;
     }
 
     /**
@@ -296,12 +315,19 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
         if ($platform instanceof MySQLPlatform) {
             $updates = implode(
                 ', ',
-                array_map(fn ($col) => "$col = VALUES($col)", $columns)
+                array_map(
+                    fn ($col) => sprintf(
+                        '%s = VALUES(%s)',
+                        $platform->quoteIdentifier($col),
+                        $col
+                    ),
+                    $columns
+                )
             );
             return [
                 sprintf(
-                    "INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s",
-                    $table,
+                    'INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s',
+                    $platform->quoteIdentifier($table),
                     $columnsList,
                     $valuesList,
                     $updates
@@ -321,8 +347,8 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
             $updates = implode(', ', array_map(fn ($col) => "$col = EXCLUDED.$col", $columns));
             return [
                 sprintf(
-                    "INSERT INTO %s (%s) VALUES %s ON CONFLICT (%s) DO UPDATE SET %s",
-                    $table,
+                    'INSERT INTO %s (%s) VALUES %s ON CONFLICT (%s) DO UPDATE SET %s',
+                    $platform->quoteIdentifier($table),
                     $columnsList,
                     $valuesList,
                     $conflictColumns,
@@ -336,8 +362,8 @@ final class DoctrineDatabase extends AbstractDatabase implements DatabaseInterfa
         if ($platform instanceof SQLitePlatform) {
             return [
                 sprintf(
-                    "INSERT OR REPLACE INTO %s (%s) VALUES %s",
-                    $table,
+                    'INSERT OR REPLACE INTO %s (%s) VALUES %s',
+                    $platform->quoteIdentifier($table),
                     $columnsList,
                     $valuesList
                 ),

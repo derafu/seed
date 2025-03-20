@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Derafu: ETL - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From Spreadsheets to Databases Seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Derafu\ETL\Schema;
 
-use Derafu\ETL\Contract\ColumnInterface;
+use Derafu\ETL\Schema\Contract\ColumnInterface;
 
 /**
  * Implementation of a database column.

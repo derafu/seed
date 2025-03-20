@@ -4,15 +4,14 @@
 declare(strict_types=1);
 
 /**
- * Derafu: ETL - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From Spreadsheets to Databases Seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-use Derafu\ETL\Command\ETLCommand;
-use Derafu\ETL\DatabaseManager;
+use Derafu\ETL\Command\PipelineCommand;
 use Symfony\Component\Console\Application;
 
 $autoloadPaths = [
@@ -37,5 +36,5 @@ if ($autoloadPath === null) {
 require $autoloadPath;
 
 $application = new Application('Derafu ETL', 'dev-main');
-$application->add(new ETLCommand(new DatabaseManager()));
+$application->add(new PipelineCommand());
 $application->run();

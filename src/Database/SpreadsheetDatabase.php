@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Derafu: ETL - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From Spreadsheets to Databases Seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Derafu\ETL\Database;
 
-use Derafu\ETL\Abstract\AbstractDatabase;
-use Derafu\ETL\Contract\DatabaseInterface;
-use Derafu\ETL\Contract\SchemaInterface;
-use Derafu\ETL\Contract\SchemaSourceInterface;
+use Derafu\ETL\Database\Abstract\AbstractDatabase;
+use Derafu\ETL\Database\Contract\DatabaseInterface;
+use Derafu\ETL\Schema\Contract\SchemaInterface;
+use Derafu\ETL\Schema\Contract\SchemaSourceInterface;
 use Derafu\ETL\Schema\Source\SpreadsheetSchemaSource;
 use Derafu\ETL\Schema\Target\SpreadsheetSchemaTarget;
 use Derafu\Spreadsheet\Contract\SpreadsheetDumperInterface;
@@ -67,13 +67,13 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
     /**
      * {@inheritDoc}
      */
-    public function save(string $file, array $options = []): self
+    public function save(string $file, array $options = []): string
     {
-        $format = $options['format'] ?? $this->options['format'] ?? 'xlsx';
+        $format = pathinfo($file, PATHINFO_EXTENSION);
 
         $this->dumper->dumpToFile($this->connection, $file, $format);
 
-        return $this;
+        return $file;
     }
 
     /**
@@ -108,15 +108,28 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
     /**
      * {@inheritDoc}
      */
+    public function sync(
+        DatabaseInterface $source,
+        array $options = []
+    ): self {
+        // Nothing to do, because when the data is loaded from a spreadsheet,
+        // the schema will be also loaded.
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function load(
         string|array|SpreadsheetInterface|DatabaseInterface $source,
         array $options = []
-    ): self {
-        parent::load($source, $options);
+    ): int {
+        $rowsLoaded = parent::load($source, $options);
 
         unset($this->schema);
 
-        return $this;
+        return $rowsLoaded;
     }
 
     /**
@@ -130,7 +143,7 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
     /**
      * {@inheritDoc}
      */
-    protected function loadFromDump(string $source, array $options = []): self
+    protected function loadFromDump(string $source, array $options = []): int
     {
         // Get the file format of the source dump. Required to load the dump.
         $format = $options['format'] ?? throw new InvalidArgumentException(
@@ -147,9 +160,10 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
     /**
      * {@inheritDoc}
      */
-    protected function loadFromArray(array $source, array $options = []): self
+    protected function loadFromArray(array $source, array $options = []): int
     {
-        return $this;
+        // TODO: Implement this.
+        return 0;
     }
 
     /**
@@ -158,7 +172,7 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
     protected function loadFromDatabase(
         DatabaseInterface $source,
         array $options = []
-    ): self {
+    ): int {
         // Get the source spreadsheet from the source database.
         $sourceSpreadsheet = $source->spreadsheet();
 
@@ -174,7 +188,7 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
         $dropTables = $options['dropTables'] ?? false;
         if ($dropDatabase || $dropTables) {
             $this->connection = $sourceSpreadsheet;
-            return $this;
+            return 0;
         }
 
         // This will create a new connection with a new spreadsheet that will
@@ -184,7 +198,7 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
         if ($dropData) {
             $schemaTarget = new SpreadsheetSchemaTarget($schemaSheetName);
             $this->connection = $schemaTarget->applySchema($source->schema());
-            return $this;
+            return 0;
         }
 
         // Nothing to drop. We keep the current connection and load the data.
@@ -194,6 +208,6 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
         // And lost the current data.
         $this->connection = $sourceSpreadsheet;
 
-        return $this;
+        return 0;
     }
 }

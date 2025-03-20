@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Derafu: ETL - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From Spreadsheets to Databases Seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Derafu\ETL\Schema\Target;
 
-use Derafu\ETL\Contract\ForeignKeyInterface;
-use Derafu\ETL\Contract\SchemaInterface;
-use Derafu\ETL\Contract\SchemaTargetInterface;
-use Derafu\ETL\Contract\TableInterface;
+use Derafu\ETL\Schema\Contract\ForeignKeyInterface;
+use Derafu\ETL\Schema\Contract\SchemaInterface;
+use Derafu\ETL\Schema\Contract\SchemaTargetInterface;
+use Derafu\ETL\Schema\Contract\TableInterface;
 
 /**
  * Generates a D2 diagram representation of a database schema.
@@ -43,9 +43,19 @@ final class D2SchemaTarget implements SchemaTargetInterface
     public const LAYOUT_MINIMAL = 'minimal';
 
     /**
+     * Direction up.
+     */
+    public const DIRECTION_UP = 'up';
+
+    /**
      * Direction down.
      */
     public const DIRECTION_DOWN = 'down';
+
+    /**
+     * Direction left.
+     */
+    public const DIRECTION_LEFT = 'left';
 
     /**
      * Direction right.

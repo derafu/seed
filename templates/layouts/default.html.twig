@@ -1,7 +1,7 @@
 {# layouts/default.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Derafu: ETL - From spreadsheets to databases seamlessly{% endblock %}
+{% block title %}Derafu: ETL - From Spreadsheets to Databases Seamlessly{% endblock %}
 
 {% block body %}
     {% block header %}
@@ -33,6 +33,20 @@
                         </li>
                         <a href="/" class="list-group-item list-group-item-action {% if request.uri.path == '/' %}active{% endif %}">
                             README
+                        </a>
+                    </div>
+                    <div class="list-group mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                            <div class="fw-bold">Docs</div>
+                            <span class="smal text-muted">Guides & Examples</span>
+                            </div>
+                        </li>
+                        <a href="/architecture" class="list-group-item list-group-item-action {% if request.uri.path == '/architecture' %}active{% endif %}">
+                            Architecture
+                        </a>
+                        <a href="/schema-visualization" class="list-group-item list-group-item-action {% if request.uri.path == '/schema-visualization' %}active{% endif %}">
+                            Schema Visualization
                         </a>
                     </div>
                 </div>

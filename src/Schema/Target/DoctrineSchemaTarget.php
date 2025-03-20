@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Derafu: ETL - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From Spreadsheets to Databases Seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Derafu\ETL\Schema\Target;
 
-use Derafu\ETL\Contract\ColumnInterface;
-use Derafu\ETL\Contract\ForeignKeyInterface;
-use Derafu\ETL\Contract\IndexInterface;
-use Derafu\ETL\Contract\SchemaInterface;
-use Derafu\ETL\Contract\SchemaTargetInterface;
-use Derafu\ETL\Contract\TableInterface;
+use Derafu\ETL\Schema\Contract\ColumnInterface;
+use Derafu\ETL\Schema\Contract\ForeignKeyInterface;
+use Derafu\ETL\Schema\Contract\IndexInterface;
+use Derafu\ETL\Schema\Contract\SchemaInterface;
+use Derafu\ETL\Schema\Contract\SchemaTargetInterface;
+use Derafu\ETL\Schema\Contract\TableInterface;
 use Doctrine\DBAL\Schema\Column as DoctrineColumn;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Schema\Table as DoctrineTable;

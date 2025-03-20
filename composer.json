@@ -1,6 +1,6 @@
 {
     "name": "derafu/etl",
-    "description": "Derafu: ETL - From spreadsheets to databases seamlessly",
+    "description": "Derafu: ETL - From Spreadsheets to Databases Seamlessly",
     "type": "library",
     "homepage": "https://derafu.org/etl",
     "license": "MIT",
@@ -25,18 +25,19 @@
         }
     },
     "require": {
-        "php": "^8.3"
+        "php": "^8.3",
+        "derafu/translation": "dev-main",
+        "derafu/spreadsheet": "dev-main",
+        "phpoffice/phpspreadsheet": "^4.1",
+        "doctrine/dbal": "^4.2",
+        "symfony/console": "^7.2"
     },
     "require-dev": {
         "ext-xdebug": "*",
         "friendsofphp/php-cs-fixer": "^3.63",
         "phpstan/phpstan": "^1.12",
         "phpunit/phpunit": "^11.4",
-        "derafu/foundation": "dev-main",
-        "doctrine/dbal": "^4.2",
-        "derafu/spreadsheet": "dev-main",
-        "phpoffice/phpspreadsheet": "^4.1",
-        "symfony/console": "^7.2"
+        "derafu/foundation": "dev-main"
     },
     "suggest": {
         "doctrine/dbal": "Required for working with databases using Doctrine DBAL.",
