@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Abstract;
+namespace Derafu\ETL\Abstract;
 
-use Derafu\Seed\Contract\DatabaseInterface;
-use Derafu\Seed\Contract\SchemaInterface;
-use Derafu\Seed\Database\SpreadsheetDatabase;
+use Derafu\ETL\Contract\DatabaseInterface;
+use Derafu\ETL\Contract\SchemaInterface;
+use Derafu\ETL\Database\SpreadsheetDatabase;
 use Derafu\Spreadsheet\Contract\SpreadsheetInterface;
 use InvalidArgumentException;
 

@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\TestsSeed\Schema\Target;
+namespace Derafu\TestsETL\Schema\Target;
 
-use Derafu\Seed\Schema\Column;
-use Derafu\Seed\Schema\ForeignKey;
-use Derafu\Seed\Schema\Index;
-use Derafu\Seed\Schema\Schema;
-use Derafu\Seed\Schema\Source\DoctrineSchemaSource;
-use Derafu\Seed\Schema\Table;
-use Derafu\Seed\Schema\Target\SqliteSchemaTarget;
+use Derafu\ETL\Schema\Column;
+use Derafu\ETL\Schema\ForeignKey;
+use Derafu\ETL\Schema\Index;
+use Derafu\ETL\Schema\Schema;
+use Derafu\ETL\Schema\Source\DoctrineSchemaSource;
+use Derafu\ETL\Schema\Table;
+use Derafu\ETL\Schema\Target\SqliteSchemaTarget;
 use PDO;
 use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;

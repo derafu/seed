@@ -3,21 +3,21 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Schema\Target;
+namespace Derafu\ETL\Schema\Target;
 
-use Derafu\Seed\Contract\ColumnInterface;
-use Derafu\Seed\Contract\ForeignKeyInterface;
-use Derafu\Seed\Contract\IndexInterface;
-use Derafu\Seed\Contract\SchemaInterface;
-use Derafu\Seed\Contract\SchemaTargetInterface;
-use Derafu\Seed\Contract\TableInterface;
+use Derafu\ETL\Contract\ColumnInterface;
+use Derafu\ETL\Contract\ForeignKeyInterface;
+use Derafu\ETL\Contract\IndexInterface;
+use Derafu\ETL\Contract\SchemaInterface;
+use Derafu\ETL\Contract\SchemaTargetInterface;
+use Derafu\ETL\Contract\TableInterface;
 
 /**
  * Generates a text representation of a database schema.

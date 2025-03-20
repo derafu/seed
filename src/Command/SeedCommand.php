@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Command;
+namespace Derafu\ETL\Command;
 
-use Derafu\Seed\Contract\DatabaseManagerInterface;
+use Derafu\ETL\Contract\DatabaseManagerInterface;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -33,15 +33,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * Example usage:
  *
- *   php app/console.php derafu:seed data.xlsx data.sqlite
- *   php app/console.php derafu:seed data.xlsx --drop-tables
- *   php app/console.php derafu:seed data.xlsx --structure-only
+ *   php app/console.php derafu:etl data.xlsx data.sqlite
+ *   php app/console.php derafu:etl data.xlsx --drop-tables
+ *   php app/console.php derafu:etl data.xlsx --structure-only
  */
 #[AsCommand(
-    name: 'derafu:seed',
-    description: 'Convert a spreadsheet to a SQLite database.'
+    name: 'derafu:etl',
+    description: 'Extract, Transform and Load Data from a Source to a Target.'
 )]
-final class SeedCommand extends Command
+final class ETLCommand extends Command
 {
     /**
      * Configure the command.
@@ -87,11 +87,11 @@ final class SeedCommand extends Command
                 'no-confirm',
                 null,
                 InputOption::VALUE_NONE,
-                'Do not confirm the seeding process.'
+                'Do not confirm the ETL pipeline process.'
             )
             ->setHelp(
                 <<<'HELP'
-The <info>derafu:seed</info> command converts a spreadsheet file to a SQLite database.
+The <info>derafu:etl</info> command converts a spreadsheet file to a SQLite database.
 
 The spreadsheet must have a specific structure:
 
@@ -155,7 +155,7 @@ HELP
         $target = $this->getTarget($input);
 
         // Show configuration.
-        $io->section('Configuration of the seeding process');
+        $io->section('Configuration of the ETL pipeline process');
         $headers = ['Database', 'Option', 'Type', 'Value'];
         $rows = [];
         foreach ($source as $key => $value) {
@@ -176,13 +176,13 @@ HELP
         }
         $io->table($headers, $rows);
 
-        // Confirm the seeding process.
+        // Confirm the ETL pipeline process.
         $confirm = $input->getOption('no-confirm') ?? false;
         if (!$confirm) {
-            $io->section('Confirm the seeding process');
+            $io->section('Confirm the ETL pipeline process');
             $io->text('Are you sure you want to proceed?');
             if (!$io->confirm('Continue?', false)) {
-                $io->error('Seeding process aborted.');
+                $io->error('ETL pipeline process aborted.');
                 return Command::FAILURE;
             }
         }
@@ -195,14 +195,14 @@ HELP
             $targetDatabase->load($sourceDatabase);
         } catch (Exception $e) {
             $io->error(sprintf(
-                'Error during the seeding process: %s',
+                'Error during the ETL pipeline process: %s',
                 $e->getMessage()
             ));
             return Command::FAILURE;
         }
 
         // Return success.
-        $io->success('Seeding process completed successfully.');
+        $io->success('ETL pipeline process completed successfully.');
         return Command::SUCCESS;
     }
 

@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\TestsSeed\Target\Data;
+namespace Derafu\TestsETL\Target\Data;
 
-use Derafu\Seed\Data\Source\SpreadsheetDataSource;
-use Derafu\Seed\Data\Target\SpreadsheetDataTarget;
+use Derafu\ETL\Data\Source\SpreadsheetDataSource;
+use Derafu\ETL\Data\Target\SpreadsheetDataTarget;
 use Derafu\Spreadsheet\SpreadsheetDumper;
 use Derafu\Spreadsheet\SpreadsheetFactory;
 use Derafu\Spreadsheet\SpreadsheetLoader;
@@ -101,7 +101,7 @@ final class SpreadsheetDataRoundTripTest extends TestCase
         $factory = new SpreadsheetFactory();
         $spreadsheet = $factory->create();
 
-        // 3. Add schema sheet to make it a valid seed spreadsheet.
+        // 3. Add schema sheet to make it a valid source spreadsheet.
         $schemaSheet = $spreadsheet->createSheet(
             name: '__schema',
             rows: [],

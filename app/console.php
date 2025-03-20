@@ -4,15 +4,15 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-use Derafu\Seed\Command\SeedCommand;
-use Derafu\Seed\DatabaseManager;
+use Derafu\ETL\Command\ETLCommand;
+use Derafu\ETL\DatabaseManager;
 use Symfony\Component\Console\Application;
 
 $autoloadPaths = [
@@ -36,6 +36,6 @@ if ($autoloadPath === null) {
 
 require $autoloadPath;
 
-$application = new Application('Derafu Seed', 'dev-main');
-$application->add(new SeedCommand(new DatabaseManager()));
+$application = new Application('Derafu ETL', 'dev-main');
+$application->add(new ETLCommand(new DatabaseManager()));
 $application->run();

@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Contract;
+namespace Derafu\ETL\Contract;
 
 /**
  * ForeignKey represents a foreign key constraint within a database table.
  *
  * This interface defines the minimum contract for working with foreign keys
- * within the Derafu\Seed package, defining relationships between tables.
+ * within the Derafu\ETL package, defining relationships between tables.
  */
 interface ForeignKeyInterface
 {

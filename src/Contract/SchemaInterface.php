@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Contract;
+namespace Derafu\ETL\Contract;
 
 /**
  * Schema represents a complete database schema structure.
  *
  * This interface defines the minimum contract for working with database schemas
- * within the Derafu\Seed package, regardless of the actual source or target
+ * within the Derafu\ETL package, regardless of the actual source or target
  * of the schema (spreadsheet, Doctrine DBAL, etc.).
  */
 interface SchemaInterface

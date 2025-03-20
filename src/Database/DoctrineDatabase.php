@@ -3,21 +3,21 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Database;
+namespace Derafu\ETL\Database;
 
-use Derafu\Seed\Abstract\AbstractDatabase;
-use Derafu\Seed\Contract\DatabaseInterface;
-use Derafu\Seed\Contract\SchemaInterface;
-use Derafu\Seed\Schema\Source\DoctrineSchemaSource;
-use Derafu\Seed\Schema\Target\DoctrineSchemaTarget;
-use Derafu\Seed\Schema\Target\SpreadsheetSchemaTarget;
+use Derafu\ETL\Abstract\AbstractDatabase;
+use Derafu\ETL\Contract\DatabaseInterface;
+use Derafu\ETL\Contract\SchemaInterface;
+use Derafu\ETL\Schema\Source\DoctrineSchemaSource;
+use Derafu\ETL\Schema\Target\DoctrineSchemaTarget;
+use Derafu\ETL\Schema\Target\SpreadsheetSchemaTarget;
 use Derafu\Spreadsheet\Contract\SpreadsheetInterface;
 use Doctrine\DBAL\Connection as DoctrineConnection;
 use Doctrine\DBAL\DriverManager as DoctrineDriverManager;

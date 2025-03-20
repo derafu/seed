@@ -3,19 +3,19 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\TestsSeed;
+namespace Derafu\TestsETL;
 
-use Derafu\Seed\Contract\SchemaInterface;
-use Derafu\Seed\Contract\SchemaSourceInterface;
-use Derafu\Seed\Contract\TableInterface;
-use Derafu\Seed\Schema\Schema;
+use Derafu\ETL\Contract\SchemaInterface;
+use Derafu\ETL\Contract\SchemaSourceInterface;
+use Derafu\ETL\Contract\TableInterface;
+use Derafu\ETL\Schema\Schema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

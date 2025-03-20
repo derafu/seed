@@ -1,11 +1,11 @@
-# Derafu: Seed - From spreadsheets to databases seamlessly
+# Derafu: ETL - From spreadsheets to databases seamlessly
 
-![GitHub last commit](https://img.shields.io/github/last-commit/derafu/seed/main)
-![CI Workflow](https://github.com/derafu/seed/actions/workflows/ci.yml/badge.svg?branch=main&event=push)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/derafu/seed)
-![GitHub Issues](https://img.shields.io/github/issues-raw/derafu/seed)
-![Total Downloads](https://poser.pugx.org/derafu/seed/downloads)
-![Monthly Downloads](https://poser.pugx.org/derafu/seed/d/monthly)
+![GitHub last commit](https://img.shields.io/github/last-commit/derafu/etl/main)
+![CI Workflow](https://github.com/derafu/etl/actions/workflows/ci.yml/badge.svg?branch=main&event=push)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/derafu/etl)
+![GitHub Issues](https://img.shields.io/github/issues-raw/derafu/etl)
+![Total Downloads](https://poser.pugx.org/derafu/etl/downloads)
+![Monthly Downloads](https://poser.pugx.org/derafu/etl/d/monthly)
 
 ---
 > WIP: Work In Progress.

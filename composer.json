@@ -1,8 +1,8 @@
 {
-    "name": "derafu/seed",
-    "description": "Derafu: Seed - From spreadsheets to databases seamlessly",
+    "name": "derafu/etl",
+    "description": "Derafu: ETL - From spreadsheets to databases seamlessly",
     "type": "library",
-    "homepage": "https://derafu.org/seed",
+    "homepage": "https://derafu.org/etl",
     "license": "MIT",
     "authors": [
         {
@@ -11,17 +11,17 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/derafu/seed/issues",
-        "source": "https://github.com/derafu/seed"
+        "issues": "https://github.com/derafu/etl/issues",
+        "source": "https://github.com/derafu/etl"
     },
     "autoload": {
         "psr-4": {
-            "Derafu\\Seed\\": "src/"
+            "Derafu\\ETL\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Derafu\\TestsSeed\\": "tests/src/"
+            "Derafu\\TestsETL\\": "tests/src/"
         }
     },
     "require": {
@@ -43,7 +43,7 @@
         "derafu/spreadsheet": "Required for working with spreadsheets as sources or targets.",
         "phpoffice/phpspreadsheet": "Required for working with spreadsheets in XLSX, XLSX or ODS formats.",
         "symfony/yaml": "Required for working with spreadsheets in YAML format.",
-        "symfony/console": "Required for the command line interface (eg. derafu:seed)."
+        "symfony/console": "Required for the command line interface (eg. derafu:etl)."
     },
     "scripts": {
         "docs": "php tools/phpdocumentor run --config=phpdoc.xml",
@@ -59,7 +59,7 @@
         "post-update-cmd": [
             "Derafu\\Foundation\\Installer::copyFiles"
         ],
-        "derafu:seed": "app/console.php derafu:seed"
+        "derafu:etl": "app/console.php derafu:etl"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * Derafu: Seed - From spreadsheets to databases seamlessly.
+ * Derafu: ETL - From spreadsheets to databases seamlessly.
  *
  * Copyright (c) 2025 Esteban De La Fuente Rubio / Derafu <https://www.derafu.org>
  * Licensed under the MIT License.
  * See LICENSE file for more details.
  */
 
-namespace Derafu\Seed\Contract;
+namespace Derafu\ETL\Contract;
 
 /**
  * Column represents a database column within a table.
  *
  * This interface defines the minimum contract for working with database columns
- * within the Derafu\Seed package, including type information and constraints.
+ * within the Derafu\ETL package, including type information and constraints.
  */
 interface ColumnInterface
 {
