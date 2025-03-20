@@ -16,7 +16,7 @@ use Derafu\Seed\Schema\Column;
 use Derafu\Seed\Schema\ForeignKey;
 use Derafu\Seed\Schema\Index;
 use Derafu\Seed\Schema\Schema;
-use Derafu\Seed\Schema\Source\DoctrineDbalSchemaSource;
+use Derafu\Seed\Schema\Source\DoctrineSchemaSource;
 use Derafu\Seed\Schema\Table;
 use Derafu\Seed\Schema\Target\SqliteSchemaTarget;
 use PDO;
@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(SqliteSchemaTarget::class)]
-#[CoversClass(DoctrineDbalSchemaSource::class)]
+#[CoversClass(DoctrineSchemaSource::class)]
 #[CoversClass(Schema::class)]
 #[CoversClass(Table::class)]
 #[CoversClass(Column::class)]
@@ -36,11 +36,11 @@ final class SqliteSchemaTargetTest extends TestCase
     public function testApplySchema(): void
     {
         // Load the Doctrine DBAL schema
-        $doctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $doctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Create a schema from the Doctrine DBAL schema.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $schema = $schemaSource->extractSchema($doctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $schema = $schemaSource->extractSchema($doctrineSchema);
 
         // Create the SQLite schema target.
         $schemaTarget = new SqliteSchemaTarget();
@@ -141,11 +141,11 @@ final class SqliteSchemaTargetTest extends TestCase
     public function testWithoutDropStatements(): void
     {
         // Load the Doctrine DBAL schema.
-        $doctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $doctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Create a schema from the Doctrine DBAL schema.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $schema = $schemaSource->extractSchema($doctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $schema = $schemaSource->extractSchema($doctrineSchema);
 
         // Create the SQLite schema target without drop statements.
         $schemaTarget = new SqliteSchemaTarget(false);
@@ -171,11 +171,11 @@ final class SqliteSchemaTargetTest extends TestCase
     public function testWithoutFormatting(): void
     {
         // Load the Doctrine DBAL schema.
-        $doctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $doctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Create a schema from the Doctrine DBAL schema.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $schema = $schemaSource->extractSchema($doctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $schema = $schemaSource->extractSchema($doctrineSchema);
 
         // Create the SQLite schema target without formatting.
         $schemaTarget = new SqliteSchemaTarget(true, false);
@@ -199,11 +199,11 @@ final class SqliteSchemaTargetTest extends TestCase
     public function testCreateInMemoryDatabase(): void
     {
         // Load the Doctrine DBAL schema.
-        $doctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $doctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Create a schema from the Doctrine DBAL schema.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $schema = $schemaSource->extractSchema($doctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $schema = $schemaSource->extractSchema($doctrineSchema);
 
         // Create the SQLite schema target.
         $schemaTarget = new SqliteSchemaTarget();

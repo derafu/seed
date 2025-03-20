@@ -17,9 +17,13 @@ use Derafu\Seed\Contract\DatabaseInterface;
 use Derafu\Seed\Contract\SchemaInterface;
 use Derafu\Seed\Contract\SchemaSourceInterface;
 use Derafu\Seed\Schema\Source\SpreadsheetSchemaSource;
+use Derafu\Seed\Schema\Target\SpreadsheetSchemaTarget;
 use Derafu\Spreadsheet\Contract\SpreadsheetDumperInterface;
 use Derafu\Spreadsheet\Contract\SpreadsheetInterface;
+use Derafu\Spreadsheet\Contract\SpreadsheetLoaderInterface;
 use Derafu\Spreadsheet\SpreadsheetDumper;
+use Derafu\Spreadsheet\SpreadsheetLoader;
+use InvalidArgumentException;
 
 /**
  * Database implementation for spreadsheets.
@@ -35,8 +39,9 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
     public function __construct(
         SpreadsheetInterface $spreadsheet,
         array $options = [],
-        private ?SpreadsheetDumperInterface $dumper = null,
-        private ?SchemaSourceInterface $schemaSource = null
+        private ?SchemaSourceInterface $schemaSource = null,
+        private ?SpreadsheetLoaderInterface $loader = null,
+        private ?SpreadsheetDumperInterface $dumper = null
     ) {
         foreach ($spreadsheet->getSheets() as $sheet) {
             $spreadsheet->addSheet($sheet->toAssociative());
@@ -44,20 +49,9 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
 
         parent::__construct($spreadsheet, $options);
 
-        $this->dumper = $dumper ?? new SpreadsheetDumper();
         $this->schemaSource = $schemaSource ?? new SpreadsheetSchemaSource();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function schema(): SchemaInterface
-    {
-        if (!isset($this->schema)) {
-            $this->schema = $this->schemaSource->extractSchema($this->connection);
-        }
-
-        return $this->schema;
+        $this->loader = $loader ?? new SpreadsheetLoader();
+        $this->dumper = $dumper ?? new SpreadsheetDumper();
     }
 
     /**
@@ -118,10 +112,87 @@ final class SpreadsheetDatabase extends AbstractDatabase implements DatabaseInte
         string|array|SpreadsheetInterface|DatabaseInterface $source,
         array $options = []
     ): self {
-        // TODO: Implement load() method.
+        parent::load($source, $options);
 
-        // Invalidate the schema cache, just in case.
         unset($this->schema);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function createSchema(): SchemaInterface
+    {
+        return $this->schemaSource->extractSchema($this->connection);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function loadFromDump(string $source, array $options = []): self
+    {
+        // Get the file format of the source dump. Required to load the dump.
+        $format = $options['format'] ?? throw new InvalidArgumentException(
+            'Format is required for loading from dump in a spreadsheet database.'
+        );
+
+        // Load the source spreadsheet from the dump.
+        $sourceSpreadsheet = $this->loader->loadFromString($source, $format);
+
+        // Load the source spreadsheet into the current connection.
+        return $this->load($sourceSpreadsheet, $options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function loadFromArray(array $source, array $options = []): self
+    {
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function loadFromDatabase(
+        DatabaseInterface $source,
+        array $options = []
+    ): self {
+        // Get the source spreadsheet from the source database.
+        $sourceSpreadsheet = $source->spreadsheet();
+
+        // Convert the sheets of the source spreadsheet to associative arrays.
+        foreach ($sourceSpreadsheet->getSheets() as $sheet) {
+            $sourceSpreadsheet->addSheet($sheet->toAssociative());
+        }
+
+        // Drop the database if requested. This is achieved by replacing the
+        // current connection with the source spreadsheet.
+        // This method keeps nothing from the current connection.
+        $dropDatabase = $options['dropDatabase'] ?? false;
+        $dropTables = $options['dropTables'] ?? false;
+        if ($dropDatabase || $dropTables) {
+            $this->connection = $sourceSpreadsheet;
+            return $this;
+        }
+
+        // This will create a new connection with a new spreadsheet that will
+        // keep only the schema from the loaded $source.
+        $dropData = $options['dropData'] ?? false;
+        $schemaSheetName = $options['schemaSheetName'] ?? '__schema';
+        if ($dropData) {
+            $schemaTarget = new SpreadsheetSchemaTarget($schemaSheetName);
+            $this->connection = $schemaTarget->applySchema($source->schema());
+            return $this;
+        }
+
+        // Nothing to drop. We keep the current connection and load the data.
+        // TODO: Implement this. It must load each sheet without dropping the
+        // current data. Just add or update the data.
+        // WARNING: For NOW, we just load the data from the source spreadsheet.
+        // And lost the current data.
+        $this->connection = $sourceSpreadsheet;
 
         return $this;
     }

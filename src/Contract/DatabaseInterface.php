@@ -87,7 +87,7 @@ interface DatabaseInterface
      *
      * $source can be:
      *
-     *   - string: a dump of the database.
+     *   - string: dump of a database of the same type of the current database.
      *   - array: a list of tables with their data.
      *   - SpreadsheetInterface: a spreadsheet.
      *   - DatabaseInterface: another database.

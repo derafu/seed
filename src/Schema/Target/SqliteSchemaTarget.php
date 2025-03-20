@@ -25,25 +25,15 @@ use Derafu\Seed\Contract\TableInterface;
 final class SqliteSchemaTarget implements SchemaTargetInterface
 {
     /**
-     * @var bool
-     */
-    private bool $includeDropStatements;
-
-    /**
-     * @var bool
-     */
-    private bool $formatOutput;
-
-    /**
      * Constructor.
      *
      * @param bool $includeDropStatements Whether to include DROP statements before CREATE statements.
      * @param bool $formatOutput Whether to format the output with indentation and newlines.
      */
-    public function __construct(bool $includeDropStatements = true, bool $formatOutput = true)
-    {
-        $this->includeDropStatements = $includeDropStatements;
-        $this->formatOutput = $formatOutput;
+    public function __construct(
+        private readonly bool $includeDropStatements = true,
+        private readonly bool $formatOutput = true
+    ) {
     }
 
     /**

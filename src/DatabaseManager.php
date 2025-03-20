@@ -14,6 +14,7 @@ namespace Derafu\Seed;
 
 use Derafu\Seed\Contract\DatabaseInterface;
 use Derafu\Seed\Contract\DatabaseManagerInterface;
+use Derafu\Seed\Database\DoctrineDatabase;
 use Derafu\Seed\Database\PdoDatabase;
 use Derafu\Seed\Database\SpreadsheetDatabase;
 use Derafu\Spreadsheet\Contract\SpreadsheetFactoryInterface;
@@ -83,6 +84,10 @@ final class DatabaseManager implements DatabaseManagerInterface
     {
         $options = $this->resolveOptions($options);
 
+        if (!empty($options['doctrine'])) {
+            return $this->connectToDoctrine($options);
+        }
+
         if (!empty($options['pdo'])) {
             return $this->connectToPdo($options);
         }
@@ -125,6 +130,19 @@ final class DatabaseManager implements DatabaseManagerInterface
         ], $options);
 
         return $options;
+    }
+
+    /**
+     * Connect to a Doctrine connection.
+     *
+     * @param array $options The options for the database (not only connection).
+     * @return DatabaseInterface The database representation.
+     */
+    private function connectToDoctrine(array $options): DatabaseInterface
+    {
+        $doctrine = $options['doctrine'];
+
+        return new DoctrineDatabase($doctrine, $options);
     }
 
     /**

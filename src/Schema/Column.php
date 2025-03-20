@@ -38,7 +38,7 @@ final class Column implements ColumnInterface
      *
      * @var bool
      */
-    private bool $nullable = false;
+    private bool $nullable = true;
 
     /**
      * The default value of the column.

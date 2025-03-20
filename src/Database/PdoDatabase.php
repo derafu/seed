@@ -14,15 +14,18 @@ namespace Derafu\Seed\Database;
 
 use Derafu\Seed\Abstract\AbstractDatabase;
 use Derafu\Seed\Contract\DatabaseInterface;
+use Derafu\Seed\Contract\SchemaInterface;
 use Derafu\Spreadsheet\Contract\SpreadsheetInterface;
-use Derafu\Spreadsheet\Spreadsheet;
 use InvalidArgumentException;
 use PDO;
+use RuntimeException;
 
 /**
  * Database implementation for PDO connections.
  *
- * This class is used to connect to a database using a PDO connection.
+ * This class is just a wrapper around the DoctrineDatabase class. This is a
+ * convenient way to connect to a database using a PDO connection or PDO
+ * connection parameters.
  */
 final class PdoDatabase extends AbstractDatabase implements DatabaseInterface
 {
@@ -68,19 +71,7 @@ final class PdoDatabase extends AbstractDatabase implements DatabaseInterface
      */
     public function dump(array $options = []): string
     {
-        // TODO: Implement dump() method.
-
-        return '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function save(string $file, array $options = []): self
-    {
-        file_put_contents($file, $this->dump($options));
-
-        return $this;
+        throw new RuntimeException('PdoDatabase::dump() not implemented.');
     }
 
     /**
@@ -88,9 +79,7 @@ final class PdoDatabase extends AbstractDatabase implements DatabaseInterface
      */
     public function data(array $options = []): array
     {
-        // TODO: Implement data() method.
-
-        return [];
+        throw new RuntimeException('PdoDatabase::data() not implemented.');
     }
 
     /**
@@ -98,44 +87,40 @@ final class PdoDatabase extends AbstractDatabase implements DatabaseInterface
      */
     public function spreadsheet(array $options = []): SpreadsheetInterface
     {
-        // TODO: Implement spreadsheet() method.
-
-        return new Spreadsheet();
+        throw new RuntimeException('PdoDatabase::spreadsheet() not implemented.');
     }
 
     /**
      * {@inheritDoc}
      */
-    public function load(
-        string|array|SpreadsheetInterface|DatabaseInterface $source,
-        array $options = []
-    ): self {
-        // If the source is a spreadsheet, load it.
-        if ($source instanceof DatabaseInterface) {
-            return $this->loadFromDatabase($source, $options);
-        }
-
-        // TODO: Implement load() method.
-
-        return $this;
+    protected function createSchema(): SchemaInterface
+    {
+        throw new RuntimeException('PdoDatabase::createSchema() not implemented.');
     }
 
     /**
-     * Load the database from a spreadsheet.
-     *
-     * @param DatabaseInterface $sourceDatabase The source database.
-     * @param array $options The options for the load.
-     * @return self The database.
+     * {@inheritDoc}
      */
-    private function loadFromDatabase(
-        DatabaseInterface $sourceDatabase,
+    protected function loadFromDump(string $source, array $options = []): self
+    {
+        throw new RuntimeException('PdoDatabase::loadFromDump() not implemented.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function loadFromArray(array $source, array $options = []): self
+    {
+        throw new RuntimeException('PdoDatabase::loadFromArray() not implemented.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function loadFromDatabase(
+        DatabaseInterface $source,
         array $options = []
     ): self {
-        $sourceSchema = $sourceDatabase->schema();
-        $sourceConnection = $sourceDatabase->connection();
-
-        // TODO: Implement this method.
-
-        return $this;
+        throw new RuntimeException('PdoDatabase::loadFromDatabase() not implemented.');
     }
 }

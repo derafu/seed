@@ -16,9 +16,9 @@ use Derafu\Seed\Schema\Column;
 use Derafu\Seed\Schema\ForeignKey;
 use Derafu\Seed\Schema\Index;
 use Derafu\Seed\Schema\Schema;
-use Derafu\Seed\Schema\Source\DoctrineDbalSchemaSource;
+use Derafu\Seed\Schema\Source\DoctrineSchemaSource;
 use Derafu\Seed\Schema\Table;
-use Derafu\Seed\Schema\Target\DoctrineDbalSchemaTarget;
+use Derafu\Seed\Schema\Target\DoctrineSchemaTarget;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Types\DateType;
 use Doctrine\DBAL\Types\DecimalType;
@@ -27,29 +27,29 @@ use Doctrine\DBAL\Types\StringType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(DoctrineDbalSchemaTarget::class)]
-#[CoversClass(DoctrineDbalSchemaSource::class)]
+#[CoversClass(DoctrineSchemaTarget::class)]
+#[CoversClass(DoctrineSchemaSource::class)]
 #[CoversClass(Column::class)]
 #[CoversClass(ForeignKey::class)]
 #[CoversClass(Index::class)]
 #[CoversClass(Schema::class)]
 #[CoversClass(Table::class)]
-final class DoctrineDbalSchemaTargetTest extends TestCase
+final class DoctrineSchemaTargetTest extends TestCase
 {
     public function testApplySchema(): void
     {
         // Load the original Doctrine DBAL schema.
-        $originalDoctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $originalDoctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Convert to our schema and back to Doctrine DBAL.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $ourSchema = $schemaSource->extractSchema($originalDoctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $ourSchema = $schemaSource->extractSchema($originalDoctrineSchema);
 
-        $schemaTarget = new DoctrineDbalSchemaTarget();
-        $resultDoctrineDbalSchema = $schemaTarget->applySchema($ourSchema);
+        $schemaTarget = new DoctrineSchemaTarget();
+        $resultDoctrineSchema = $schemaTarget->applySchema($ourSchema);
 
         // Verify the result is a Doctrine Schema
-        $this->assertInstanceOf(DoctrineSchema::class, $resultDoctrineDbalSchema);
+        $this->assertInstanceOf(DoctrineSchema::class, $resultDoctrineSchema);
 
         // Verify that all tables are present
         $expectedTables = [
@@ -59,13 +59,13 @@ final class DoctrineDbalSchemaTargetTest extends TestCase
 
         foreach ($expectedTables as $tableName) {
             $this->assertTrue(
-                $resultDoctrineDbalSchema->hasTable($tableName),
+                $resultDoctrineSchema->hasTable($tableName),
                 "Schema should have table '{$tableName}'."
             );
         }
 
         // Test specific table structure (e.g., invoice)
-        $invoiceTable = $resultDoctrineDbalSchema->getTable('invoice');
+        $invoiceTable = $resultDoctrineSchema->getTable('invoice');
 
         // Check columns.
         $this->assertTrue(
@@ -120,11 +120,11 @@ final class DoctrineDbalSchemaTargetTest extends TestCase
     public function testRoundTrip(): void
     {
         // Test roundtrip conversion: Doctrine DBAL -> Our Schema -> Doctrine DBAL.
-        $originalDoctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $originalDoctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Original schema tables and columns.
         $originalTables = [];
-        foreach ($originalDoctrineDbalSchema->getTables() as $table) {
+        foreach ($originalDoctrineSchema->getTables() as $table) {
             $tableName = $table->getName();
             $originalTables[$tableName] = [];
 
@@ -136,15 +136,15 @@ final class DoctrineDbalSchemaTargetTest extends TestCase
         }
 
         // Convert to our schema and back.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $ourSchema = $schemaSource->extractSchema($originalDoctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $ourSchema = $schemaSource->extractSchema($originalDoctrineSchema);
 
-        $schemaTarget = new DoctrineDbalSchemaTarget();
-        $resultDoctrineDbalSchema = $schemaTarget->applySchema($ourSchema);
+        $schemaTarget = new DoctrineSchemaTarget();
+        $resultDoctrineSchema = $schemaTarget->applySchema($ourSchema);
 
         // Resulting schema tables and columns.
         $resultTables = [];
-        foreach ($resultDoctrineDbalSchema->getTables() as $table) {
+        foreach ($resultDoctrineSchema->getTables() as $table) {
             $tableName = $table->getName();
             $resultTables[$tableName] = [];
 
@@ -174,38 +174,38 @@ final class DoctrineDbalSchemaTargetTest extends TestCase
     public function testTypeMapping(): void
     {
         // Create a simple test schema with different column types.
-        $originalDoctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $originalDoctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Extract our schema.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $ourSchema = $schemaSource->extractSchema($originalDoctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $ourSchema = $schemaSource->extractSchema($originalDoctrineSchema);
 
         // Convert back to Doctrine DBAL.
-        $schemaTarget = new DoctrineDbalSchemaTarget();
-        $resultDoctrineDbalSchema = $schemaTarget->applySchema($ourSchema);
+        $schemaTarget = new DoctrineSchemaTarget();
+        $resultDoctrineSchema = $schemaTarget->applySchema($ourSchema);
 
         // Check type mapping for some key columns.
         $this->assertInstanceOf(
             StringType::class,
-            $resultDoctrineDbalSchema->getTable('party')->getColumn('name')->getType(),
+            $resultDoctrineSchema->getTable('party')->getColumn('name')->getType(),
             "String type should be correctly mapped"
         );
 
         $this->assertInstanceOf(
             DecimalType::class,
-            $resultDoctrineDbalSchema->getTable('invoice')->getColumn('total_amount')->getType(),
+            $resultDoctrineSchema->getTable('invoice')->getColumn('total_amount')->getType(),
             "Decimal type should be correctly mapped"
         );
 
         $this->assertInstanceOf(
             GuidType::class,
-            $resultDoctrineDbalSchema->getTable('invoice')->getColumn('id')->getType(),
+            $resultDoctrineSchema->getTable('invoice')->getColumn('id')->getType(),
             "GUID type should be correctly mapped"
         );
 
         $this->assertInstanceOf(
             DateType::class,
-            $resultDoctrineDbalSchema->getTable('invoice')->getColumn('issue_date')->getType(),
+            $resultDoctrineSchema->getTable('invoice')->getColumn('issue_date')->getType(),
             "Date type should be correctly mapped"
         );
     }

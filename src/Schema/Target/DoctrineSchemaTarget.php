@@ -26,7 +26,7 @@ use Doctrine\DBAL\Types\Type as DoctrineType;
 /**
  * Converts a schema to a Doctrine DBAL Schema.
  */
-final class DoctrineDbalSchemaTarget implements SchemaTargetInterface
+final class DoctrineSchemaTarget implements SchemaTargetInterface
 {
     /**
      * Map of type names to Doctrine DBAL type names.

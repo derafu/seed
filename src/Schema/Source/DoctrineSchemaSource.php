@@ -20,23 +20,23 @@ use Derafu\Seed\Schema\Index;
 use Derafu\Seed\Schema\Schema;
 use Derafu\Seed\Schema\Table;
 use Doctrine\DBAL\Schema\Column as DoctrineColumn;
-use Doctrine\DBAL\Schema\Schema as DoctrineDbalSchema;
+use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Types\Type as DoctrineType;
 use RuntimeException;
 
 /**
  * Extracts schema information from a Doctrine DBAL Schema object.
  */
-final class DoctrineDbalSchemaSource implements SchemaSourceInterface
+final class DoctrineSchemaSource implements SchemaSourceInterface
 {
     /**
      * {@inheritDoc}
      */
     public function extractSchema(mixed $source): SchemaInterface
     {
-        if (!($source instanceof DoctrineDbalSchema)) {
+        if (!($source instanceof DoctrineSchema)) {
             throw new RuntimeException(
-                'The Doctrine DBAL Schema must be an instance of DoctrineDbalSchema.'
+                'The Doctrine DBAL Schema must be an instance of DoctrineSchema.'
             );
         }
 

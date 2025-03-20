@@ -231,9 +231,7 @@ class SpreadsheetSchemaSource implements SchemaSourceInterface
             $column = new Column($columnName, $properties['type'] ?? 'string');
 
             // Set nullable property.
-            if (isset($properties['nullable'])) {
-                $column->setNullable($properties['nullable']);
-            }
+            $column->setNullable($properties['nullable'] ?? true);
 
             // Set length property.
             if (isset($properties['length'])) {

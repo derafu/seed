@@ -16,10 +16,10 @@ use Derafu\Seed\Schema\Column;
 use Derafu\Seed\Schema\ForeignKey;
 use Derafu\Seed\Schema\Index;
 use Derafu\Seed\Schema\Schema;
-use Derafu\Seed\Schema\Source\DoctrineDbalSchemaSource;
+use Derafu\Seed\Schema\Source\DoctrineSchemaSource;
 use Derafu\Seed\Schema\Source\SpreadsheetSchemaSource;
 use Derafu\Seed\Schema\Table;
-use Derafu\Seed\Schema\Target\DoctrineDbalSchemaTarget;
+use Derafu\Seed\Schema\Target\DoctrineSchemaTarget;
 use Derafu\Seed\Schema\Target\SpreadsheetSchemaTarget;
 use Derafu\Spreadsheet\SpreadsheetDumper;
 use Derafu\Spreadsheet\SpreadsheetLoader;
@@ -34,8 +34,8 @@ use PHPUnit\Framework\TestCase;
  */
 #[CoversClass(SpreadsheetSchemaSource::class)]
 #[CoversClass(SpreadsheetSchemaTarget::class)]
-#[CoversClass(DoctrineDbalSchemaSource::class)]
-#[CoversClass(DoctrineDbalSchemaTarget::class)]
+#[CoversClass(DoctrineSchemaSource::class)]
+#[CoversClass(DoctrineSchemaTarget::class)]
 #[CoversClass(Column::class)]
 #[CoversClass(ForeignKey::class)]
 #[CoversClass(Index::class)]
@@ -46,12 +46,12 @@ final class SpreadsheetSchemaRoundTripTest extends TestCase
     public function testRoundTripSchemaConversion(): void
     {
         // 1. Load the original Doctrine DBAL schema.
-        $originalDoctrineDbalSchema = require __DIR__ . '/../../fixtures/doctrine-dbal-schema.php';
-        $this->assertInstanceOf(DoctrineSchema::class, $originalDoctrineDbalSchema);
+        $originalDoctrineSchema = require __DIR__ . '/../../fixtures/doctrine-dbal-schema.php';
+        $this->assertInstanceOf(DoctrineSchema::class, $originalDoctrineSchema);
 
         // 2. Convert Doctrine DBAL Schema to our Schema model.
-        $schemaSource = new DoctrineDbalSchemaSource();
-        $ourSchema = $schemaSource->extractSchema($originalDoctrineDbalSchema);
+        $schemaSource = new DoctrineSchemaSource();
+        $ourSchema = $schemaSource->extractSchema($originalDoctrineSchema);
 
         // 3. Convert our Schema to a Spreadsheet.
         $spreadsheetTarget = new SpreadsheetSchemaTarget();
@@ -71,22 +71,22 @@ final class SpreadsheetSchemaRoundTripTest extends TestCase
         $regeneratedSchema = $spreadsheetSource->extractSchema($loadedSpreadsheet);
 
         // 7. Convert our regenerated Schema back to Doctrine DBAL Schema.
-        $doctrineDbalTarget = new DoctrineDbalSchemaTarget();
-        $regeneratedDoctrineDbalSchema = $doctrineDbalTarget->applySchema($regeneratedSchema);
+        $doctrineTarget = new DoctrineSchemaTarget();
+        $regeneratedDoctrineSchema = $doctrineTarget->applySchema($regeneratedSchema);
 
         // 8. Compare the original and regenerated Doctrine DBAL schemas.
-        $this->assertInstanceOf(DoctrineSchema::class, $regeneratedDoctrineDbalSchema);
+        $this->assertInstanceOf(DoctrineSchema::class, $regeneratedDoctrineSchema);
 
         // Compare table count.
         $this->assertCount(
-            count($originalDoctrineDbalSchema->getTables()),
-            $regeneratedDoctrineDbalSchema->getTables(),
+            count($originalDoctrineSchema->getTables()),
+            $regeneratedDoctrineSchema->getTables(),
             'The number of tables should match.'
         );
 
         // Compare table names.
-        $originalTableNames = $this->getTableNames($originalDoctrineDbalSchema);
-        $regeneratedTableNames = $this->getTableNames($regeneratedDoctrineDbalSchema);
+        $originalTableNames = $this->getTableNames($originalDoctrineSchema);
+        $regeneratedTableNames = $this->getTableNames($regeneratedDoctrineSchema);
         $this->assertSame(
             sort($originalTableNames),
             sort($regeneratedTableNames),
@@ -94,14 +94,14 @@ final class SpreadsheetSchemaRoundTripTest extends TestCase
         );
 
         // Compare each table in detail.
-        foreach ($originalDoctrineDbalSchema->getTables() as $originalTable) {
+        foreach ($originalDoctrineSchema->getTables() as $originalTable) {
             $tableName = $originalTable->getName();
             $this->assertTrue(
-                $regeneratedDoctrineDbalSchema->hasTable($tableName),
+                $regeneratedDoctrineSchema->hasTable($tableName),
                 "Regenerated schema should have table '$tableName'."
             );
 
-            $regeneratedTable = $regeneratedDoctrineDbalSchema->getTable($tableName);
+            $regeneratedTable = $regeneratedDoctrineSchema->getTable($tableName);
 
             // Compare column count.
             $this->assertCount(

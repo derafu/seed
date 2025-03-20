@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Schema::class)]
 final class SchemaMockTest extends TestCase
 {
-    public function testDoctrineDbalSchema(): void
+    public function testDoctrineSchema(): void
     {
         // Create a mock SchemaSourceInterface that will be implemented later.
         $schemaSource = $this->createMock(SchemaSourceInterface::class);

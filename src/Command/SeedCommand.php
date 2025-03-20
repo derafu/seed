@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Derafu\Seed\Command;
 
 use Derafu\Seed\Contract\DatabaseManagerInterface;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -75,6 +76,12 @@ final class SeedCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Drop existing data before creating new ones.'
+            )
+            ->addOption(
+                'structure-only',
+                null,
+                InputOption::VALUE_NONE,
+                'Create structure only (no data).'
             )
             ->addOption(
                 'no-confirm',
@@ -170,19 +177,32 @@ HELP
         $io->table($headers, $rows);
 
         // Confirm the seeding process.
-        $io->section('Confirm the seeding process');
-        $io->text('Are you sure you want to proceed?');
-        if (!$io->confirm('Continue?', false)) {
-            $io->error('Seeding process aborted.');
+        $confirm = $input->getOption('no-confirm') ?? false;
+        if (!$confirm) {
+            $io->section('Confirm the seeding process');
+            $io->text('Are you sure you want to proceed?');
+            if (!$io->confirm('Continue?', false)) {
+                $io->error('Seeding process aborted.');
+                return Command::FAILURE;
+            }
+        }
+
+        // Connect to the source and target databases. Then load the source
+        // spreadsheet into the target database.
+        try {
+            $sourceDatabase = $this->databaseManager->connect($source);
+            $targetDatabase = $this->databaseManager->connect($target);
+            $targetDatabase->load($sourceDatabase);
+        } catch (Exception $e) {
+            $io->error(sprintf(
+                'Error during the seeding process: %s',
+                $e->getMessage()
+            ));
             return Command::FAILURE;
         }
 
-        // Connect to the source and target databases.
-        $sourceDatabase = $this->databaseManager->connect($source);
-        $targetDatabase = $this->databaseManager->connect($target);
-
-        $targetDatabase->load($sourceDatabase->spreadsheet());
-
+        // Return success.
+        $io->success('Seeding process completed successfully.');
         return Command::SUCCESS;
     }
 
@@ -227,10 +247,11 @@ HELP
             'dropDatabase' => $input->getOption('drop-database') ?? false,
             'dropTables' => $input->getOption('drop-tables') ?? false,
             'dropData' => $input->getOption('drop-data') ?? false,
+            'structureOnly' => $input->getOption('structure-only') ?? false,
         ];
 
         if ($options['format'] === 'sqlite') {
-            $options['pdo'] = 'sqlite:' . $options['file'];
+            $options['doctrine'] = $options['file'];
         }
 
         return $options;

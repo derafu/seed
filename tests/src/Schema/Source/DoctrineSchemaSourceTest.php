@@ -17,33 +17,33 @@ use Derafu\Seed\Schema\Column;
 use Derafu\Seed\Schema\ForeignKey;
 use Derafu\Seed\Schema\Index;
 use Derafu\Seed\Schema\Schema;
-use Derafu\Seed\Schema\Source\DoctrineDbalSchemaSource;
+use Derafu\Seed\Schema\Source\DoctrineSchemaSource;
 use Derafu\Seed\Schema\Table;
-use Doctrine\DBAL\Schema\Schema as DoctrineDbalSchema;
+use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(DoctrineDbalSchemaSource::class)]
+#[CoversClass(DoctrineSchemaSource::class)]
 #[CoversClass(Schema::class)]
 #[CoversClass(Table::class)]
 #[CoversClass(Column::class)]
 #[CoversClass(ForeignKey::class)]
 #[CoversClass(Index::class)]
-final class DoctrineDbalSchemaSourceTest extends TestCase
+final class DoctrineSchemaSourceTest extends TestCase
 {
     public function testExtractSchema(): void
     {
         // Load the Doctrine DBAL schema.
-        $doctrineDbalSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
+        $doctrineSchema = require __DIR__ . '/../../../fixtures/doctrine-dbal-schema.php';
 
         // Make sure it's a valid Doctrine DBAL Schema.
-        $this->assertInstanceOf(DoctrineDbalSchema::class, $doctrineDbalSchema);
+        $this->assertInstanceOf(DoctrineSchema::class, $doctrineSchema);
 
         // Create the schema source.
-        $schemaSource = new DoctrineDbalSchemaSource();
+        $schemaSource = new DoctrineSchemaSource();
 
         // Execute the method we're testing.
-        $schema = $schemaSource->extractSchema($doctrineDbalSchema);
+        $schema = $schemaSource->extractSchema($doctrineSchema);
 
         // Test that the result is an instance of our SchemaInterface.
         $this->assertInstanceOf(SchemaInterface::class, $schema);
