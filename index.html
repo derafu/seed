@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Derafu: ETL - From spreadsheets to databases seamlessly</title>
+    <title>Derafu: ETL - From Spreadsheets to Databases Seamlessly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.min.css" rel="stylesheet" />
@@ -20,28 +20,99 @@
             <div class="row">
                 <main class="col-md-9">
                     <div class="container py-4">
-    <div class="markdown-body"><h1><a id="content-derafu-etl---from-spreadsheets-to-databases-seamlessly" href="index.html#content-derafu-etl---from-spreadsheets-to-databases-seamlessly" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Derafu: ETL - From spreadsheets to databases seamlessly</h1>
+    <div class="markdown-body"><h1><a id="content-derafu-etl---from-spreadsheets-to-databases-seamlessly" href="index.html#content-derafu-etl---from-spreadsheets-to-databases-seamlessly" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Derafu: ETL - From Spreadsheets to Databases Seamlessly</h1>
 <p><img src="https://img.shields.io/github/last-commit/derafu/etl/main" alt="GitHub last commit" />
 <img src="https://github.com/derafu/etl/actions/workflows/ci.yml/badge.svg?branch=main&amp;event=push" alt="CI Workflow" />
 <img src="https://img.shields.io/github/languages/code-size/derafu/etl" alt="GitHub code size in bytes" />
 <img src="https://img.shields.io/github/issues-raw/derafu/etl" alt="GitHub Issues" />
 <img src="https://poser.pugx.org/derafu/etl/downloads" alt="Total Downloads" />
 <img src="https://poser.pugx.org/derafu/etl/d/monthly" alt="Monthly Downloads" /></p>
-<hr />
-<blockquote>
-<p>WIP: Work In Progress.</p>
-</blockquote>
-<hr />
 <p>A PHP package that transforms spreadsheet data into database structures and content with minimal effort.</p>
-<h2><a id="content-ideas" href="index.html#content-ideas" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Ideas</h2>
-<ul>
-<li><input checked="" disabled="" type="checkbox"> Support for both XLSX and ODS formats.</li>
-<li><input checked="" disabled="" type="checkbox"> Automatic table creation based on spreadsheet structure.</li>
-<li><input disabled="" type="checkbox"> Schema updates when source files change.</li>
-<li><input disabled="" type="checkbox"> Smart handling of inserts vs updates.</li>
-<li><input disabled="" type="checkbox"> Support for table relationships.</li>
-<li><input disabled="" type="checkbox"> Simple command-line and programmatic interfaces.</li>
+<h2><a id="content-overview" href="index.html#content-overview" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Overview</h2>
+<p>Derafu ETL provides a streamlined solution for converting data between spreadsheets and databases. With a clean, fluent API, it simplifies complex data integration tasks through a pipeline architecture.</p>
+<pre><code class="line-numbers match-braces language-php">$pipeline = new Pipeline();
+$result = $pipeline
+    -&gt;extract('data.xlsx')      // Extract data from a spreadsheet.
+    -&gt;transform($rules)         // Apply transformations rules (optional).
+    -&gt;load('database.sqlite')   // Load into a database.
+    -&gt;execute()
+;
+</code></pre>
+<h2><a id="content-key-features" href="index.html#content-key-features" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Key Features</h2>
+<ul class="list-unstyled">
+<li>📤 <strong>Extract</strong> data from various sources (XLSX, ODS, CSV, databases).</li>
+<li>🔄 <strong>Transform</strong> data with customizable rules.</li>
+<li>📥 <strong>Load</strong> data into different target systems.</li>
+<li>🔁 <strong>Bidirectional</strong> conversion between spreadsheets and databases.</li>
+<li>🏗️ <strong>Schema management</strong> with automatic table creation and structure updates.</li>
+<li>📊 <strong>Data visualization</strong> capabilities with schema export to Markdown, D2, and more.</li>
+<li>🧩 <strong>Extensible</strong> architecture for custom source and target systems.</li>
 </ul>
+<h2><a id="content-installation" href="index.html#content-installation" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Installation</h2>
+<p>Install via Composer:</p>
+<pre><code class="line-numbers match-braces language-bash">composer require derafu/etl
+</code></pre>
+<h2><a id="content-quick-start" href="index.html#content-quick-start" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Quick Start</h2>
+<h3><a id="content-command-line" href="index.html#content-command-line" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Command Line</h3>
+<p>The quickest way to use Derafu ETL is through the command line:</p>
+<pre><code class="line-numbers match-braces language-bash">php app/console.php derafu:etl data.xlsx database.sqlite
+</code></pre>
+<p>This extracts data from <code>data.xlsx</code> and loads it into a new SQLite database on <code>database.sqlite</code>.</p>
+<h4><a id="content-example" href="index.html#content-example" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Example</h4>
+<p>Run the example used in tests with:</p>
+<pre><code class="line-numbers match-braces language-shell">php app/console.php derafu:etl tests/fixtures/spreadsheet-data.xlsx
+</code></pre>
+<p>This will create a <code>spreadsheet-data.sqlite</code> in the current directory.</p>
+<h3><a id="content-php-code" href="index.html#content-php-code" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>PHP Code</h3>
+<pre><code class="line-numbers match-braces language-php">use Derafu\ETL\Pipeline\Pipeline;
+
+$pipeline = new Pipeline();
+$result = $pipeline
+    -&gt;extract('data.xlsx')  // Load data from a XLSX.
+    -&gt;transform()           // This will use default transformations.
+    -&gt;load([                // You can specify the configuration for Doctrine.
+        'doctrine' =&gt; [
+            'driver' =&gt; 'pdo_sqlite',
+            'path' =&gt; 'database.sqlite',
+        ]
+    ])
+    -&gt;execute();            // This is will run the process.
+
+echo &quot;Rows loaded: &quot; . $result-&gt;rowsLoaded();
+</code></pre>
+<h2><a id="content-understanding-etl-pipelines" href="index.html#content-understanding-etl-pipelines" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Understanding ETL Pipelines</h2>
+<p>An ETL pipeline consists of three main steps:</p>
+<ol>
+<li><strong>Extract</strong>: Read data from a source (e.g., spreadsheet).</li>
+<li><strong>Transform</strong>: Apply rules and transformations to the data.</li>
+<li><strong>Load</strong>: Write the transformed data to a target (e.g., database).</li>
+</ol>
+<p>Derafu ETL provides a clean interface for each step while handling the complex details behind the scenes.</p>
+<h2><a id="content-more-than-just-move-data-to-a-target" href="index.html#content-more-than-just-move-data-to-a-target" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>More than just move data to a target</h2>
+<h3><a id="content-export-database-schema-to-markdown" href="index.html#content-export-database-schema-to-markdown" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Export Database Schema to Markdown</h3>
+<pre><code class="line-numbers match-braces language-php">use Derafu\ETL\Database\DatabaseManager;
+use Derafu\ETL\Schema\Target\MarkdownSchemaTarget;
+
+$manager = new DatabaseManager();
+$database = $manager-&gt;connect('database.sqlite');
+
+$target = new MarkdownSchemaTarget();
+$markdown = $target-&gt;applySchema($database-&gt;schema());
+
+file_put_contents('schema.md', $markdown);
+</code></pre>
+<h3><a id="content-generate-database-diagram" href="index.html#content-generate-database-diagram" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Generate Database Diagram</h3>
+<pre><code class="line-numbers match-braces language-php">use Derafu\ETL\Database\DatabaseManager;
+use Derafu\ETL\Schema\Target\D2SchemaTarget;
+
+$manager = new DatabaseManager();
+$database = $manager-&gt;connect('database.sqlite');
+
+$target = new D2SchemaTarget();
+$d2 = $target-&gt;applySchema($database-&gt;schema());
+
+file_put_contents('schema.d2', $d2);
+</code></pre>
 <h2><a id="content-contributing" href="index.html#content-contributing" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Contributing</h2>
 <p>Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.</p>
 <h2><a id="content-license" href="index.html#content-license" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>License</h2>
@@ -68,6 +139,20 @@
                         </li>
                         <a href="index.html" class="list-group-item list-group-item-action active">
                             README
+                        </a>
+                    </div>
+                    <div class="list-group mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                            <div class="fw-bold">Docs</div>
+                            <span class="smal text-muted">Guides & Examples</span>
+                            </div>
+                        </li>
+                        <a href="architecture.html" class="list-group-item list-group-item-action ">
+                            Architecture
+                        </a>
+                        <a href="schema-visualization.html" class="list-group-item list-group-item-action ">
+                            Schema Visualization
                         </a>
                     </div>
                 </div>

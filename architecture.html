@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derafu: ETL - From Spreadsheets to Databases Seamlessly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/command-line/prism-command-line.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/match-braces/prism-match-braces.min.css" rel="stylesheet" />
+    <link href="https://derafu.org/css/styles.min.css" rel="stylesheet" />
+    </head>
+<body>
+                <div id="header-container" class="sticky-top"></div>
+    
+            <div class="container">
+            <div class="row">
+                <main class="col-md-9">
+                    <div class="container py-4">
+    <div class="markdown-body"><h1><a id="content-derafu-etl-architecture" href="architecture.html#content-derafu-etl-architecture" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Derafu ETL Architecture</h1>
+<p>This document explains the architecture and design principles behind Derafu ETL.</p>
+<ul class="table-of-contents">
+<li><a href="architecture.html#content-etl-pattern">ETL Pattern</a>
+<ul>
+<li><a href="architecture.html#content-the-three-phases">The Three Phases</a></li>
+</ul>
+</li>
+<li><a href="architecture.html#content-derafu-etl-implementation">Derafu ETL Implementation</a>
+<ul>
+<li><a href="architecture.html#content-core-components">Core Components</a></li>
+<li><a href="architecture.html#content-pipeline-orchestration">Pipeline Orchestration</a></li>
+</ul>
+</li>
+<li><a href="architecture.html#content-key-abstractions">Key Abstractions</a>
+<ul>
+<li><a href="architecture.html#content-database">Database</a></li>
+<li><a href="architecture.html#content-schema">Schema</a></li>
+</ul>
+</li>
+<li><a href="architecture.html#content-extension-points">Extension Points</a></li>
+<li><a href="architecture.html#content-design-principles">Design Principles</a></li>
+</ul>
+<h2><a id="content-etl-pattern" href="architecture.html#content-etl-pattern" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>ETL Pattern</h2>
+<p>The Extract-Transform-Load (ETL) pattern is a data integration process used to collect data from various sources, transform it to fit operational needs, and load it into a target database for analysis and storage.</p>
+<h3><a id="content-the-three-phases" href="architecture.html#content-the-three-phases" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>The Three Phases</h3>
+<ol>
+<li><strong>Extract</strong>: Gathering data from source systems.</li>
+<li><strong>Transform</strong>: Converting the extracted data to satisfy operational requirements.</li>
+<li><strong>Load</strong>: Writing the transformed data to the target system.</li>
+</ol>
+<h2><a id="content-derafu-etl-implementation" href="architecture.html#content-derafu-etl-implementation" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Derafu ETL Implementation</h2>
+<p>Derafu ETL implements this pattern with a clean, object-oriented approach centered around the Pipeline concept.</p>
+<h3><a id="content-core-components" href="architecture.html#content-core-components" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Core Components</h3>
+<p class="w-75 mx-auto"><img src="http://127.0.0.1:9000/img/core-components.svg" alt="ETL Pipeline" /></p>
+<h4><a id="content-extract-phase" href="architecture.html#content-extract-phase" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Extract Phase</h4>
+<ul>
+<li><code>DataSource</code>: Encapsulates the data source (spreadsheet, database).</li>
+<li><code>DataExtractor</code>: Handles extraction logic.</li>
+<li><code>SchemaSource</code>: Extracts schema information from the source.</li>
+</ul>
+<h4><a id="content-transform-phase" href="architecture.html#content-transform-phase" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Transform Phase</h4>
+<ul>
+<li><code>DataRules</code>: Defines transformation rules.</li>
+<li><code>DataTransformer</code>: Applies transformations to extracted data.</li>
+</ul>
+<h4><a id="content-load-phase" href="architecture.html#content-load-phase" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Load Phase</h4>
+<ul>
+<li><code>DataTarget</code>: Represents the destination system.</li>
+<li><code>DataLoader</code>: Manages loading data into the target.</li>
+<li><code>SchemaTarget</code>: Applies schema to the target system.</li>
+</ul>
+<h3><a id="content-pipeline-orchestration" href="architecture.html#content-pipeline-orchestration" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Pipeline Orchestration</h3>
+<p>The <code>Pipeline</code> class orchestrates the entire ETL process, providing a fluent interface:</p>
+<pre><code class="line-numbers match-braces language-php">$pipeline
+    -&gt;extract($source)    // Configure extraction.
+    -&gt;transform($rules)   // Configure transformation.
+    -&gt;load($target)       // Configure loading.
+    -&gt;execute()           // Run the pipeline.
+;
+</code></pre>
+<p>When <code>execute()</code> is called, the pipeline:</p>
+<ol>
+<li>Validates the configuration.</li>
+<li>Extracts data from the source.</li>
+<li>Transforms the data according to rules.</li>
+<li>Synchronizes the target schema with the source.</li>
+<li>Loads the transformed data into the target.</li>
+<li>Returns a result object with statistics.</li>
+</ol>
+<h2><a id="content-key-abstractions" href="architecture.html#content-key-abstractions" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Key Abstractions</h2>
+<h3><a id="content-database" href="architecture.html#content-database" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Database</h3>
+<p>The <code>Database</code> abstraction provides a unified interface for different database types:</p>
+<ul>
+<li><code>SpreadsheetDatabase</code>: Treats spreadsheets as databases using <a rel="nofollow noopener noreferrer" target="_blank" class="external-link" href="https://derafu.org/spreadsheet">Derafu Spreadsheet</a>.</li>
+<li><code>DoctrineDatabase</code>: Works with any database supported by Doctrine DBAL.</li>
+</ul>
+<h3><a id="content-schema" href="architecture.html#content-schema" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Schema</h3>
+<p>The <code>Schema</code> system represents database structure:</p>
+<ul>
+<li>Tables, columns, indexes, foreign keys.</li>
+<li>Import/export to various formats (Spreadsheet, Doctrine, Markdown, D2, etc.).</li>
+</ul>
+<h2><a id="content-extension-points" href="architecture.html#content-extension-points" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Extension Points</h2>
+<p>Derafu ETL is designed for extensibility:</p>
+<ol>
+<li><strong>New Data Sources</strong>: Implement <code>DataSourceInterface</code>.</li>
+<li><strong>Custom Transformations</strong>: Extend <code>DataRules</code>.</li>
+<li><strong>New Data Targets</strong>: Implement <code>DataTargetInterface</code>.</li>
+<li><strong>Schema Visualization</strong>: Implement <code>SchemaTargetInterface</code>.</li>
+</ol>
+<h2><a id="content-design-principles" href="architecture.html#content-design-principles" class="text-decoration-none small text-muted" aria-hidden="true" title="Permalink"><i class="fa-solid fa-link"></i> </a>Design Principles</h2>
+<ol>
+<li><strong>Separation of Concerns</strong>: Each component has a clear responsibility.</li>
+<li><strong>Fluent Interface</strong>: Expressive, chainable API.</li>
+<li><strong>Flexibility</strong>: Support for various formats and systems.</li>
+<li><strong>Extensibility</strong>: Easy to extend with custom components.</li>
+</ol>
+</div>
+</div>
+                </main>
+                <div class="col-md-3 py-4">
+                    <div class="list-group mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">Package Info</div>
+                                <span class="smal text-muted">
+                                    <a href="https://github.com/derafu/etl" target="_blank" class="link-secondary text-decoration-none">
+                                        <i class="fa-brands fa-github"></i>
+                                        derafu/etl
+                                    </a>
+                                </span>
+                                <div class="my-2">
+                                    <img src="https://img.shields.io/github/stars/derafu/etl" alt="GitHub Repo stars">
+                                    <img src="https://img.shields.io/github/forks/derafu/etl" alt="GitHub forks">
+                                </div>
+                            </div>
+                        </li>
+                        <a href="index.html" class="list-group-item list-group-item-action ">
+                            README
+                        </a>
+                    </div>
+                    <div class="list-group mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                            <div class="fw-bold">Docs</div>
+                            <span class="smal text-muted">Guides & Examples</span>
+                            </div>
+                        </li>
+                        <a href="architecture.html" class="list-group-item list-group-item-action active">
+                            Architecture
+                        </a>
+                        <a href="schema-visualization.html" class="list-group-item list-group-item-action ">
+                            Schema Visualization
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+            <div id="footer-container"></div>
+        <script src="https://derafu.org/js/derafu.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/show-language/prism-show-language.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/command-line/prism-command-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/match-braces/prism-match-braces.min.js"></script>
+    </body>
+</html>
