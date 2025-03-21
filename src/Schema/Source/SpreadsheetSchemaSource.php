@@ -118,7 +118,10 @@ class SpreadsheetSchemaSource implements SchemaSourceInterface
             }
 
             foreach ($columnNames as $columnName) {
-                $column = new Column($columnName, $columnTypes[$columnName]);
+                $column = new Column(
+                    $columnName,
+                    $columnTypes[$columnName] ?? 'string'
+                );
                 $table->addColumn($column);
             }
 
